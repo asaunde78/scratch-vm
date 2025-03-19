@@ -3,6 +3,7 @@ const ArgumentType = require('../../extension-support/argument-type');
 const BlockType = require('../../extension-support/block-type');
 const TargetType = require('../../extension-support/target-type');
 
+const formatMessage = require('format-message');
 
 class Scratch3TestBlocks {
     constructor (runtime) {
@@ -15,18 +16,14 @@ class Scratch3TestBlocks {
     }
     getInfo () {
         return {
-            id: 'someBlocks',
-            name: 'Some Blocks',
+            id: 'brb',
+            name: 'Blue Ridge Boost',
             blocks: [
                 {
-                    opcode: 'myReporter',
+                    opcode: 'test',
                     blockType: BlockType.REPORTER,
-                    text: 'letter [LETTER_NUM] of [TEXT]',
+                    text: '[TEXT] starts with "a"',
                     arguments: {
-                        LETTER_NUM: {
-                            type: ArgumentType.STRING,
-                            defaultValue: '1'
-                        },
                         TEXT: {
                             type: ArgumentType.STRING,
                             defaultValue: 'text'
@@ -40,24 +37,20 @@ class Scratch3TestBlocks {
      * Implement myReporter.
      * @param {object} args - the block's arguments.
      * @property {string} MY_ARG - the string value of the argument.
-     * @returns {string} a string which includes the block argument value.
+     * @returns {boolean} a string which includes the block argument value.
      */
-    myReporter (args) {
+    test (args) {
         // This message contains ICU placeholders, not Scratch placeholders
         const message = formatMessage({
-            id: 'myReporter.result',
-            defaultMessage: 'Letter {LETTER_NUM} of {TEXT} is {LETTER}.',
-            description: 'The text template for the "myReporter" block result'
+            id: 'test.result',
+            defaultMessage: '{TEXT} starts with "a".',
+            description: 'The text template for the "test" block result'
         });
 
         // Note: this implementation is not Unicode-clean; it's just here as an example.
-        const result = args.TEXT.charAt(args.LETTER_NUM);
+        const result = args.TEXT.charAt(0);
 
-        return message.format({
-            LETTER_NUM: args.LETTER_NUM,
-            TEXT: args.TEXT,
-            LETTER: result
-        });
+        return result;
     };
 }
 
